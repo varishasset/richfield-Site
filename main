@@ -1,122 +1,182 @@
-// main.jsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Requests</title>
+  <style>
+    /* Basic styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-// App.jsx
-import React, { useState, useEffect } from 'react';
-import FeatureForm from './components/FeatureForm';
-import FeatureList from './components/FeatureList';
+    h1 {
+      margin: 0;
+    }
 
-export default function App() {
-  const [features, setFeatures] = useState(() => {
-    const saved = localStorage.getItem('features');
-    return saved ? JSON.parse(saved) : [];
-  });
+    main {
+      padding: 20px;
+    }
 
-  useEffect(() => {
-    localStorage.setItem('features', JSON.stringify(features));
-  }, [features]);
+    .form-section, .suggestions-section {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
 
-  const addFeature = (feature) => {
-    setFeatures([feature, ...features]);
-  };
+    h2 {
+      margin-top: 0;
+    }
 
-  const voteFeature = (id) => {
-    setFeatures(features.map(f => f.id === id ? { ...f, votes: f.votes + 1 } : f));
-  };
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
-  return (
-    <div className="max-w-3xl mx-auto p-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center">College Feature Suggestions</h1>
-      <FeatureForm onAddFeature={addFeature} />
-      <FeatureList features={features} onVote={voteFeature} />
-    </div>
-  );
-}
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-// components/FeatureForm.jsx
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+    button:hover {
+      background-color: #45a049;
+    }
 
-export default function FeatureForm({ onAddFeature }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
-    onAddFeature({
-      id: Date.now(),
-      title,
-      description,
-      votes: 0,
+    li {
+      background-color: #f1f1f1;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vote-button {
+      background-color: #2196F3;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .vote-button:hover {
+      background-color: #0b7dda;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #333;
+      color: white;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Feature Requests and Voting</h1>
+    <p>College students and staff can submit feature requests and vote on them!</p>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>Submit Your Feature Request</h2>
+      <form id="requestForm">
+        <input type="text" id="featureInput" placeholder="Enter feature request" required>
+        <button type="submit">Submit Request</button>
+      </form>
+    </section>
+
+    <section class="suggestions-section">
+      <h2>Submitted Feature Requests</h2>
+      <ul id="suggestionsList">
+        <!-- List of suggestions will appear here -->
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Powered by Simple Web Technologies</p>
+  </footer>
+
+  <script>
+    // Get the DOM elements
+    const requestForm = document.getElementById('requestForm');
+    const featureInput = document.getElementById('featureInput');
+    const suggestionsList = document.getElementById('suggestionsList');
+
+    // Array to store feature requests
+    let featureRequests = [];
+
+    // Handle form submission
+    requestForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Get the feature request from the input field
+      const featureRequest = featureInput.value;
+
+      // Add the new feature request to the array
+      featureRequests.push({ name: featureRequest, votes: 0 });
+
+      // Clear the input field
+      featureInput.value = '';
+
+      // Re-render the list
+      renderFeatureRequests();
     });
-    setTitle('');
-    setDescription('');
-  };
 
-  return (
-    <Card>
-      <CardContent className="space-y-4 p-4">
-        <h2 className="text-xl font-semibold">Submit a New Feature</h2>
-        <Input
-          placeholder="Feature title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <Textarea
-          placeholder="Describe your feature suggestion"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Button onClick={handleSubmit}>Submit Feature</Button>
-      </CardContent>
-    </Card>
-  );
-}
+    // Function to render the list of feature requests
+    function renderFeatureRequests() {
+      suggestionsList.innerHTML = ''; // Clear the list before rendering
 
-// components/FeatureList.jsx
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+      // Loop through the feature requests and add them to the list
+      featureRequests.forEach((request, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${request.name}</span>
+          <div>
+            <button class="vote-button" onclick="vote(${index})">Vote (${request.votes})</button>
+          </div>
+        `;
+        suggestionsList.appendChild(li);
+      });
+    }
 
-export default function FeatureList({ features, onVote }) {
-  const [tab, setTab] = useState('popular');
+    // Function to handle voting
+    function vote(index) {
+      // Increment the vote count for the selected request
+      featureRequests[index].votes++;
 
-  const sortedFeatures = tab === 'popular'
-    ? [...features].sort((a, b) => b.votes - a.votes)
-    : features;
-
-  return (
-    <Tabs value={tab} onValueChange={setTab} className="w-full">
-      <TabsList>
-        <TabsTrigger value="popular">Most Popular</TabsTrigger>
-        <TabsTrigger value="newest">Newest</TabsTrigger>
-      </TabsList>
-      <TabsContent value={tab} className="mt-4">
-        {sortedFeatures.map(f => (
-          <Card key={f.id} className="my-2">
-            <CardContent className="flex justify-between items-center p-4">
-              <div>
-                <h3 className="text-lg font-semibold">{f.title}</h3>
-                <p className="text-sm text-gray-600">{f.description}</p>
-              </div>
-              <Button onClick={() => onVote(f.id)}>{f.votes} Upvotes</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </TabsContent>
-    </Tabs>
-  );
-}
+      // Re-render the list after voting
+      renderFeatureRequests();
+    }
+  </script>
+</body>
+</html>
