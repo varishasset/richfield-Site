@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feature Requests</title>
   <style>
-    /* Basic styles */
+    /* Basic styling */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -39,53 +39,10 @@
       margin-top: 0;
     }
 
-    input[type="text"] {
-      width: 80%;
-      padding: 10px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      padding: 10px 15px;
-      background-color: #4CAF50;
-      color: white;
+    iframe {
+      width: 100%;
+      height: 600px;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    li {
-      background-color: #f1f1f1;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .vote-button {
-      background-color: #2196F3;
-      color: white;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .vote-button:hover {
-      background-color: #0b7dda;
     }
 
     footer {
@@ -108,75 +65,14 @@
   <main>
     <section class="form-section">
       <h2>Submit Your Feature Request</h2>
-      <form id="requestForm">
-        <input type="text" id="featureInput" placeholder="Enter feature request" required>
-        <button type="submit">Submit Request</button>
-      </form>
-    </section>
-
-    <section class="suggestions-section">
-      <h2>Submitted Feature Requests</h2>
-      <ul id="suggestionsList">
-        <!-- List of suggestions will appear here -->
-      </ul>
+      <p>Fill out the form below to submit your feature requests and vote on others' suggestions.</p>
+      <!-- Embed the Tally.so form here -->
+      <iframe src="https://tally.so/embed/xyz" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0" style="border: none; min-width: 100%; min-height: 500px; overflow: hidden;"></iframe>
     </section>
   </main>
 
   <footer>
     <p>Powered by Simple Web Technologies</p>
   </footer>
-
-  <script>
-    // Get the DOM elements
-    const requestForm = document.getElementById('requestForm');
-    const featureInput = document.getElementById('featureInput');
-    const suggestionsList = document.getElementById('suggestionsList');
-
-    // Array to store feature requests
-    let featureRequests = [];
-
-    // Handle form submission
-    requestForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      // Get the feature request from the input field
-      const featureRequest = featureInput.value;
-
-      // Add the new feature request to the array
-      featureRequests.push({ name: featureRequest, votes: 0 });
-
-      // Clear the input field
-      featureInput.value = '';
-
-      // Re-render the list
-      renderFeatureRequests();
-    });
-
-    // Function to render the list of feature requests
-    function renderFeatureRequests() {
-      suggestionsList.innerHTML = ''; // Clear the list before rendering
-
-      // Loop through the feature requests and add them to the list
-      featureRequests.forEach((request, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${request.name}</span>
-          <div>
-            <button class="vote-button" onclick="vote(${index})">Vote (${request.votes})</button>
-          </div>
-        `;
-        suggestionsList.appendChild(li);
-      });
-    }
-
-    // Function to handle voting
-    function vote(index) {
-      // Increment the vote count for the selected request
-      featureRequests[index].votes++;
-
-      // Re-render the list after voting
-      renderFeatureRequests();
-    }
-  </script>
 </body>
 </html>
