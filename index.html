@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feature Requests</title>
   <style>
-    /* Basic styling */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -69,10 +68,71 @@
       <!-- Embed the Tally.so form here -->
       <iframe src="https://tally.so/embed/xyz" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0" style="border: none; min-width: 100%; min-height: 500px; overflow: hidden;"></iframe>
     </section>
+
+    <section class="suggestions-section">
+      <h2>Previous Feature Requests</h2>
+      <ul id="suggestions-list"></ul>
+    </section>
+
+    <section>
+      <h3>Submit a Feature Request</h3>
+      <input type="text" id="feature-input" placeholder="Enter your feature request">
+      <button onclick="submitFeatureRequest()">Submit</button>
+    </section>
   </main>
 
   <footer>
     <p>Powered by Simple Web Technologies</p>
   </footer>
+
+  <script>
+    // Load saved feature requests from local storage
+    window.onload = function() {
+      loadFeatureRequests();
+    };
+
+    // Function to submit a new feature request
+    function submitFeatureRequest() {
+      const featureInput = document.getElementById("feature-input");
+      const featureText = featureInput.value.trim();
+
+      if (featureText) {
+        // Get existing requests from localStorage or initialize an empty array
+        let featureRequests = JSON.parse(localStorage.getItem("featureRequests")) || [];
+
+        // Add the new feature request to the array
+        featureRequests.push(featureText);
+
+        // Save updated array back to localStorage
+        localStorage.setItem("featureRequests", JSON.stringify(featureRequests));
+
+        // Clear input field
+        featureInput.value = "";
+
+        // Reload the displayed list of feature requests
+        loadFeatureRequests();
+      } else {
+        alert("Please enter a valid feature request.");
+      }
+    }
+
+    // Function to load and display feature requests
+    function loadFeatureRequests() {
+      const suggestionsList = document.getElementById("suggestions-list");
+
+      // Get feature requests from localStorage
+      let featureRequests = JSON.parse(localStorage.getItem("featureRequests")) || [];
+
+      // Clear the existing list
+      suggestionsList.innerHTML = "";
+
+      // Display all feature requests
+      featureRequests.forEach(function(request) {
+        const li = document.createElement("li");
+        li.textContent = request;
+        suggestionsList.appendChild(li);
+      });
+    }
+  </script>
 </body>
 </html>
